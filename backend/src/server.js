@@ -36,15 +36,25 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ message: "Unexpected server error" });
 });
 
+
 const PORT = process.env.PORT || 5003;
 
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => {
+async function startServer() {
+  try {
+    if (!process.env.MONGODB_URI) {
+      throw new Error("MONGODB_URI is missing. Check Render environment variables.");
+    }
+
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log("MongoDB connected");
-    app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
-  })
-  .catch((err) => {
-    console.error("MongoDB connection failed:", err.message);
+
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`SocialConnect API running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error("Server startup failed:", err.message);
     process.exit(1);
-  });
+  }
+}
+
+startServer();
