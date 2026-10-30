@@ -1,0 +1,12 @@
+import { Router } from "express";
+import auth from "../middleware/auth.js";
+import { getPosts, createPost, toggleLike, addComment, toggleSave, deletePost } from "../controllers/postController.js";
+import upload from "../middleware/upload.js";
+const router = Router();
+router.get("/", auth, getPosts);
+router.post("/", auth, upload.single("media"), createPost);
+router.post("/:id/like", auth, toggleLike);
+router.post("/:id/comments", auth, addComment);
+router.post("/:id/save", auth, toggleSave);
+router.delete("/:id", auth, deletePost);
+export default router;

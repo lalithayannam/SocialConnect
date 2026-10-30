@@ -1,0 +1,11 @@
+import { Router } from "express";
+import auth from "../middleware/auth.js";
+import { activeCalls, startCall, getCall, signalCall, callHistory } from "../controllers/callController.js";
+const router = Router();
+router.use(auth);
+router.get("/active", activeCalls);
+router.get("/history", callHistory);
+router.post("/:userId", startCall);
+router.get("/session/:id", getCall);
+router.post("/session/:id/signal", signalCall);
+export default router;
